@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::query()->get();
+        $users = User::query()->with('roles')->get();
         return view('app.users.index', ['users' => $users]);
     }
 
@@ -37,7 +37,8 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        User::query()->create($validateData);
+        $user = User::query()->create($validateData);
+        $user->assignRole('writer');
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
