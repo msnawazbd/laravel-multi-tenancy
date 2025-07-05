@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\App;
 
-use App\Models\Tenant;
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Validation\Rules;
 use Illuminate\Http\Request;
 
-class TenantController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tenants = Tenant::query()->with('domains')->get();
-        return view('tenants.index', ['tenants' => $tenants]);
+        $users = User::query()->get();
+        return view('app.users.index', ['users' => $users]);
     }
 
     /**
@@ -22,7 +23,7 @@ class TenantController extends Controller
      */
     public function create()
     {
-        return view('tenants.create');
+        return view('app.users.create');
     }
 
     /**
@@ -32,24 +33,19 @@ class TenantController extends Controller
     {
         $validateData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:tenants,email',
-            'domain_name' => 'required|string|max:255|unique:domains,domain',
+            'email' => 'required|email|max:255|unique:users,email',
             'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $tenant = Tenant::query()->create($validateData);
+        User::query()->create($validateData);
 
-        $tenant->domains()->create([
-            'domain' => $validateData['domain_name'] . '.' . config('app.domain'),
-        ]);
-
-        return redirect()->route('tenants.index')->with('success', 'Tenant created successfully.');
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Tenant $tenant)
+    public function show(User $tenant)
     {
         //
     }
@@ -57,7 +53,7 @@ class TenantController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tenant $tenant)
+    public function edit(User $tenant)
     {
         //
     }
@@ -65,7 +61,7 @@ class TenantController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tenant $tenant)
+    public function update(Request $request, User $tenant)
     {
         //
     }
@@ -73,7 +69,7 @@ class TenantController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tenant $tenant)
+    public function destroy(User $tenant)
     {
         //
     }
