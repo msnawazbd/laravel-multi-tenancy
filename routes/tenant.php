@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\App\PostController;
 use App\Http\Controllers\App\ProfileController;
 use App\Http\Controllers\App\UserController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,8 @@ Route::middleware([
         Route::middleware(['role:admin'])->group(function () {
             Route::resource('users', UserController::class);
         });
+
+        Route::resource('posts', PostController::class);
     });
 
     require __DIR__ . '/tenant_auth.php';
